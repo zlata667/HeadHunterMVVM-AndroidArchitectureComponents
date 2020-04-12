@@ -1,24 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/refresher"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
 
-    <LinearLayout
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
+
+    <data class="VacanciesBinding">
+
+        <import
+            alias="V"
+            type="android.view.View" />
+
+        <variable
+            name="vm"
+            type="com.example.headhunter.ui.vacancies.VacanciesViewModel" />
+
+    </data>
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresher"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        bind:onRefresh="@{vm.onRefreshListener}"
+        bind:refreshState="@{vm.isLoading}">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone" />
+            android:orientation="vertical">
 
-        <include
-            layout="@layout/v_error"
-            android:visibility="gone" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                bind:data="@{vm.vacancies}"
+                bind:clickHandler="@{vm.onItemClickListener}"
+                android:visibility="@{vm.isErrorVisible ? V.GONE : V.VISIBLE}" />
 
-    </LinearLayout>
+            <include
+                layout="@layout/v_error"
+                android:visibility="@{vm.isErrorVisible ? V.VISIBLE : V.GONE}" />
 
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </LinearLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</layout>

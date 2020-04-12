@@ -18,13 +18,14 @@ import java.util.List;
 public class VacanciesAdapter extends RecyclerView.Adapter<VacanciesHolder>{
 
     private final OnItemClickListener mOnItemClickListener;
-
-    VacanciesAdapter(OnItemClickListener onItemClickListener){
-        mOnItemClickListener = onItemClickListener;
-    }
-
     @NonNull
-    private final List<Vacancies.ItemsBean> vacancyList = new ArrayList<>();
+    private final List<Vacancies.ItemsBean> vacancyList;
+
+
+    public VacanciesAdapter(List<Vacancies.ItemsBean> vacancies, OnItemClickListener onItemClickListener){
+        mOnItemClickListener = onItemClickListener;
+        vacancyList = vacancies;
+    }
 
     @NonNull
     @Override
@@ -43,11 +44,11 @@ public class VacanciesAdapter extends RecyclerView.Adapter<VacanciesHolder>{
     public int getItemCount(){
         return vacancyList.size();
     }
-
-    void setItems(Collection<Vacancies.ItemsBean> vacancies){
-       vacancyList.addAll(vacancies);
-       notifyDataSetChanged();
-    }
+//
+//    void setItems(Collection<Vacancies.ItemsBean> vacancies){
+//       vacancyList.addAll(vacancies);
+//       notifyDataSetChanged();
+//    }
 
    public void clearItems(){
        vacancyList.clear();
