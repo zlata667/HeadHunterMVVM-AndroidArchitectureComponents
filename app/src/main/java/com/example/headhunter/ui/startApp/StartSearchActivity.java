@@ -29,7 +29,6 @@ import io.reactivex.schedulers.Schedulers;
 
 public class StartSearchActivity extends SingleFragmentActivity{
 
-
     @Override
     protected Fragment getFragment(){
         return StartSearchFragment.newInstance();

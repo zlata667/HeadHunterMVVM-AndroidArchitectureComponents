@@ -10,21 +10,22 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.headhunter.R;
 
-public abstract class SingleFragmentActivity extends AppCompatActivity implements
-        SwipeRefreshLayout.OnRefreshListener, RefreshOwner{
-
-    private SwipeRefreshLayout swipeRefreshLayout;
+public abstract class SingleFragmentActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ac_swipe_container);
-        swipeRefreshLayout = findViewById(R.id.refresher);
-        swipeRefreshLayout.setOnRefreshListener(this);
+        setContentView(getLayout());
 
         if (savedInstanceState == null){
             changeFragment(getFragment());
         }
+    }
+
+    protected abstract Fragment getFragment();
+
+    protected int getLayout(){
+        return R.layout.ac_container;
     }
 
     public void changeFragment(Fragment fragment){
@@ -41,20 +42,4 @@ public abstract class SingleFragmentActivity extends AppCompatActivity implement
         transaction.commit();
     }
 
-    protected abstract Fragment getFragment();
-
-    @Override
-    public void onRefresh(){
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-        if (fragment instanceof Refreshable) {
-            ((Refreshable) fragment).onRefreshData();
-        } else {
-            setRefreshState(false);
-        }
-    }
-
-    @Override
-    public void setRefreshState(boolean refreshing) {
-        swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(refreshing));
-    }
 }

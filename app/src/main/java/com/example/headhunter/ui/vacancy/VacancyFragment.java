@@ -6,33 +6,30 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.headhunter.R;
-import com.example.headhunter.common.RefreshOwner;
-import com.example.headhunter.common.Refreshable;
 import com.example.headhunter.data.model.Vacancy;
 import com.example.headhunter.utils.ApiUtils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class VacancyFragment extends Fragment implements Refreshable{
+public class VacancyFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     public static final String VACANCY_ID = "VACANCY_ID";
 
-    private RefreshOwner refreshOwner;
     private Disposable disposable;
     private NestedScrollView vacancyView;
     private View errorView;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private TextView vacancyName;
     private TextView employerName;
@@ -50,7 +47,6 @@ public class VacancyFragment extends Fragment implements Refreshable{
     @Override
     public void onAttach(@NonNull Context context){
         super.onAttach(context);
-        refreshOwner = context instanceof RefreshOwner ? (RefreshOwner) context : null;
     }
 
     @Nullable
@@ -68,6 +64,7 @@ public class VacancyFragment extends Fragment implements Refreshable{
         employerName = view.findViewById(R.id.employer_name);
         salary = view.findViewById(R.id.salary);
         vacancyDescription = view.findViewById(R.id.vacancy_description);
+        swipeRefreshLayout = view.findViewById(R.id.refresher);
     }
 
     @Override
@@ -82,22 +79,19 @@ public class VacancyFragment extends Fragment implements Refreshable{
             getActivity().setTitle("Vacancy");
         }
 
+        swipeRefreshLayout.setOnRefreshListener(this);
+
         vacancyView.setVisibility(View.VISIBLE);
 
-        onRefreshData();
-    }
-
-    @Override
-    public void onRefreshData(){
-        getVacancy();
+        onRefresh();
     }
 
     private void getVacancy(){
         disposable = ApiUtils.getApiService().getVacancy(vacancyId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable1 -> refreshOwner.setRefreshState(true))
-                .doFinally(() -> refreshOwner.setRefreshState(false))
+                .doOnSubscribe(disposable1 -> swipeRefreshLayout.setRefreshing(true))
+                .doFinally(() -> swipeRefreshLayout.setRefreshing(false))
                 .subscribe(vacancy -> {
                             errorView.setVisibility(View.GONE);
                             vacancyView.setVisibility(View.VISIBLE);
@@ -120,10 +114,14 @@ public class VacancyFragment extends Fragment implements Refreshable{
 
     @Override
     public void onDetach(){
-        refreshOwner = null;
         if (disposable!= null) {
             disposable.dispose();
         }
         super.onDetach();
+    }
+
+    @Override
+    public void onRefresh(){
+        getVacancy();
     }
 }

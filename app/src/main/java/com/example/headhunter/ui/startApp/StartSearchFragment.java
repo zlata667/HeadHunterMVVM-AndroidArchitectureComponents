@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.headhunter.R;
 import com.example.headhunter.data.model.Country;
@@ -30,7 +31,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class StartSearchFragment extends Fragment{
+public class StartSearchFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private Disposable disposable;
     private Map<String, String> regionMap = new HashMap<>();
@@ -41,6 +42,7 @@ public class StartSearchFragment extends Fragment{
 
     private AutoCompleteTextView autoCompleteTextView;
     private EditText editTextSearch;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     static Fragment newInstance(){
         return new StartSearchFragment();
@@ -61,6 +63,7 @@ public class StartSearchFragment extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
         searchView = view.findViewById(R.id.view_search);
         errorView = view.findViewById(R.id.errorView);
+        swipeRefreshLayout = view.findViewById(R.id.refresher);
         
         editTextSearch = view.findViewById(R.id.et_search);
         view.findViewById(R.id.btn_search).setOnClickListener(v -> {
@@ -87,15 +90,15 @@ public class StartSearchFragment extends Fragment{
         disposable = ApiUtils.getApiService().getCities()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(disposable1 -> swipeRefreshLayout.setRefreshing(true))
+                .doFinally(() -> swipeRefreshLayout.setRefreshing(false))
                 .subscribe(
                         countries -> {
                             errorView.setVisibility(View.GONE);
                             searchView.setVisibility(View.VISIBLE);
                             bind(countries);
                         },
-                        throwable -> {
-                            Toast.makeText(getContext(), "Не удалось загрузить список регионов", Toast.LENGTH_SHORT).show();
-                        }
+                        throwable -> Toast.makeText(getContext(), "Не удалось загрузить список регионов", Toast.LENGTH_SHORT).show()
                 );
     }
 
@@ -116,7 +119,9 @@ public class StartSearchFragment extends Fragment{
     public void onActivityCreated(@Nullable Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         searchView.setVisibility(View.VISIBLE);
-        getCities();
+
+        swipeRefreshLayout.setOnRefreshListener(this);
+        onRefresh();
     }
 
     @Override
@@ -125,5 +130,10 @@ public class StartSearchFragment extends Fragment{
             disposable.dispose();
         }
         super.onDetach();
+    }
+
+    @Override
+    public void onRefresh(){
+        getCities();
     }
 }

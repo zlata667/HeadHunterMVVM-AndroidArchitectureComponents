@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.headhunter.R;
 import com.example.headhunter.data.model.Vacancies;
+import com.example.headhunter.databinding.VacancyBinding;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,9 +29,9 @@ public class VacanciesAdapter extends RecyclerView.Adapter<VacanciesHolder>{
     @NonNull
     @Override
     public VacanciesHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType){
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.li_vacancies, parent, false);
-        return new VacanciesHolder(view);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        VacancyBinding binding = VacancyBinding.inflate(inflater, parent, false);
+        return new VacanciesHolder(binding);
     }
 
     @Override
