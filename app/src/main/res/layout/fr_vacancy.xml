@@ -1,22 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/refresher"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
+    <data class="VacancyInfoBinding">
+
+        <variable
+            name="vacancy"
+            type="com.example.headhunter.ui.vacancy.VacancyItemViewModel" />
+
+    </data>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresher"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <include
-            layout="@layout/v_vacancy"
-            android:visibility="gone" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <include
-            layout="@layout/v_error"
-            android:visibility="gone" />
+                <androidx.core.widget.NestedScrollView
+                    android:id="@+id/view_vacancy"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="8dp"
+                    android:visibility="gone"
+                    android:scrollbars="none">
 
-    </LinearLayout>
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/vacancy_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{vacancy.vacancyName}"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/employer_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{vacancy.employerName}"
+                            android:textAlignment="viewEnd"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/salary"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{vacancy.salary}"
+                            android:textAlignment="viewEnd"
+                            android:textSize="15sp" />
+
+
+                        <TextView
+                            android:id="@+id/vacancy_description"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{vacancy.vacancyDescription}"
+                            android:textSize="14sp" />
+
+
+                    </LinearLayout>
+                </androidx.core.widget.NestedScrollView>
+
+            <include
+                layout="@layout/v_error"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</layout>

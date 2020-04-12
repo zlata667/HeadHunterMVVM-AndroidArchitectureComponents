@@ -11,11 +11,13 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
+import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.headhunter.R;
 import com.example.headhunter.data.model.Vacancy;
+import com.example.headhunter.databinding.VacancyInfoBinding;
 import com.example.headhunter.utils.ApiUtils;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -31,12 +33,9 @@ public class VacancyFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private View errorView;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private TextView vacancyName;
-    private TextView employerName;
-    private TextView salary;
-    private TextView vacancyDescription;
-
     private String vacancyId;
+
+    private VacancyInfoBinding binding;
 
     static Fragment newInstance(Bundle args){
         VacancyFragment fragment = new VacancyFragment();
@@ -52,7 +51,8 @@ public class VacancyFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
-        return inflater.inflate(R.layout.fr_vacancy, container, false);
+        binding = VacancyInfoBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
@@ -60,10 +60,6 @@ public class VacancyFragment extends Fragment implements SwipeRefreshLayout.OnRe
         vacancyView = view.findViewById(R.id.view_vacancy);
         errorView = view.findViewById(R.id.errorView);
 
-        vacancyName = view.findViewById(R.id.vacancy_name);
-        employerName = view.findViewById(R.id.employer_name);
-        salary = view.findViewById(R.id.salary);
-        vacancyDescription = view.findViewById(R.id.vacancy_description);
         swipeRefreshLayout = view.findViewById(R.id.refresher);
     }
 
@@ -104,12 +100,8 @@ public class VacancyFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void bind(Vacancy vacancy){
-        vacancyName.setText(vacancy.getName());
-        employerName.setText(vacancy.getEmployer().getName());
-        if (vacancy.getSalary() != null){
-            salary.setText(String.valueOf(vacancy.getSalary().getFrom()).concat(" ").concat(vacancy.getSalary().getCurrency()));
-        }
-        vacancyDescription.setText(Html.fromHtml(vacancy.getDescription()));
+        binding.setVacancy(new VacancyItemViewModel(vacancy));
+        binding.executePendingBindings();
     }
 
     @Override
