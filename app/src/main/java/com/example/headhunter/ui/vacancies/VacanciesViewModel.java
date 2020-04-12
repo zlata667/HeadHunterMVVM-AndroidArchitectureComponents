@@ -27,14 +27,14 @@ public class VacanciesViewModel{
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener = () -> loadVacancies(mSearchText, mSearchRegion);
 
 
-    public VacanciesViewModel(VacanciesAdapter.OnItemClickListener onItemClickListener,
-                              String searchText, String searchRegion){
+    VacanciesViewModel(VacanciesAdapter.OnItemClickListener onItemClickListener,
+                       String searchText, String searchRegion){
         mOnItemClickListener = onItemClickListener;
         mSearchText = searchText;
         mSearchRegion = searchRegion;
     }
 
-    public void loadVacancies(String searchText, String searchRegion){
+    void loadVacancies(String searchText, String searchRegion){
         disposable = ApiUtils.getApiService().getVacancies(searchText, searchRegion)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -49,7 +49,7 @@ public class VacanciesViewModel{
                 );
     }
 
-    public void dispatchDetach(){
+    void dispatchDetach(){
         if (disposable != null) {
             disposable.dispose();
         }

@@ -44,11 +44,6 @@ public class VacanciesAdapter extends RecyclerView.Adapter<VacanciesHolder>{
     public int getItemCount(){
         return vacancyList.size();
     }
-//
-//    void setItems(Collection<Vacancies.ItemsBean> vacancies){
-//       vacancyList.addAll(vacancies);
-//       notifyDataSetChanged();
-//    }
 
    public void clearItems(){
        vacancyList.clear();

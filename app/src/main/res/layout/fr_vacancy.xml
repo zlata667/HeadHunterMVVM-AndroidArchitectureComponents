@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data class="VacancyInfoBinding">
 
+        <import
+            alias="V"
+            type="android.view.View" />
+
         <variable
-            name="vacancy"
-            type="com.example.headhunter.ui.vacancy.VacancyItemViewModel" />
+            name="vacancyModel"
+            type="com.example.headhunter.ui.vacancy.VacancyViewModel" />
 
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresher"
+        bind:onRefresh="@{vacancyModel.onRefreshListener}"
+        bind:refreshState="@{vacancyModel.isLoading}"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -25,7 +32,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="8dp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:scrollbars="none">
 
                     <LinearLayout
@@ -37,14 +44,14 @@
                             android:id="@+id/vacancy_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@{vacancy.vacancyName}"
+                            android:text="@{vacancyModel.vacancyName}"
                             android:textSize="20sp" />
 
                         <TextView
                             android:id="@+id/employer_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@{vacancy.employerName}"
+                            android:text="@{vacancyModel.employerName}"
                             android:textAlignment="viewEnd"
                             android:textSize="15sp" />
 
@@ -52,7 +59,7 @@
                             android:id="@+id/salary"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@{vacancy.salary}"
+                            android:text="@{vacancyModel.salary}"
                             android:textAlignment="viewEnd"
                             android:textSize="15sp" />
 
@@ -61,7 +68,7 @@
                             android:id="@+id/vacancy_description"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@{vacancy.vacancyDescription}"
+                            android:text="@{vacancyModel.vacancyDescription}"
                             android:textSize="14sp" />
 
 
@@ -70,7 +77,7 @@
 
             <include
                 layout="@layout/v_error"
-                android:visibility="gone" />
+                android:visibility="@{vacancyModel.isErrorVisible ? V.VISIBLE : V.GONE}" />
 
         </LinearLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
