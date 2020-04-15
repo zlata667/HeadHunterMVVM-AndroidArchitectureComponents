@@ -2,4 +2,5 @@
     <string name="app_name">HeadHunter</string>
     <string name="error">Something went wrong. Try again.</string>
     <string name="vacancy">Vacancy</string>
+    <string name="vacancies">Vacancies</string>
 </resources>

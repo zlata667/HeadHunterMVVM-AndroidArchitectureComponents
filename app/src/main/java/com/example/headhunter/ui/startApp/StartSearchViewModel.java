@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableBoolean;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.headhunter.data.model.Country;
@@ -14,81 +17,85 @@ import com.example.headhunter.ui.vacancies.VacanciesActivity;
 import com.example.headhunter.ui.vacancies.VacanciesFragment;
 import com.example.headhunter.utils.ApiUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class StartSearchViewModel{
+public class StartSearchViewModel extends ViewModel{
 
     private Disposable disposable;
     private Context mContext;
-
-    private ObservableBoolean isErrorVisible = new ObservableBoolean(false);
-    private ObservableBoolean isLoading = new ObservableBoolean(false);
+    private MutableLiveData<String> searchText = new MutableLiveData<>();
+    private MutableLiveData<String> autoCompleteText = new MutableLiveData<>();
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener = () -> loadRegions();
 
-    private ObservableArrayList<String> regionList = new ObservableArrayList<>();
-    private Map<String, String> regionMap = new HashMap<>();
-    private String searchText = "";
-    private String autoCompleteText = "";
+    private MutableLiveData<Boolean> isErrorVisible = new MutableLiveData<>();
+    private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
+
+    private Map<String, String> regionsMap = new HashMap<>();
+    private List<String> list = new ArrayList<>();
+    private MutableLiveData<List<String>> regionList = new MutableLiveData<>();
 
     public StartSearchViewModel(Context context){
         mContext = context;
+        regionList.setValue(new ArrayList<>());
+        loadRegions();
     }
 
     public void loadRegions(){
         disposable = ApiUtils.getApiService().getCities()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable1 -> isLoading.set(true))
-                .doFinally(() -> isLoading.set(false))
+                .doOnSubscribe(disposable1 -> isLoading.postValue(true))
+                .doFinally(() -> isLoading.postValue(false))
                 .subscribe(
                         countries -> {
-                            isErrorVisible.set(false);
+                            isErrorVisible.postValue(false);
                             bind(countries);
                         },
-                        throwable -> isErrorVisible.set(true)
+                        throwable -> isErrorVisible.postValue(true)
                 );
     }
 
     private void bind(List<Country> countries){
         for (Country country : countries){
             for (Country.Region region : country.getAreas()){
-                regionMap.put(region.getName(), region.getId());
+                list.add(region.getName());
+                regionsMap.put(region.getName(), region.getId());
             }
         }
-        regionList.addAll(regionMap.keySet());
+        regionList.postValue(list);
     }
 
     public void openVacanciesFragment(){
         Intent intent = new Intent(mContext, VacanciesActivity.class);
         Bundle args = new Bundle();
-
-        if (regionMap.containsKey(autoCompleteText)){
-            args.putString(VacanciesFragment.SEARCH_REGION, regionMap.get(autoCompleteText));
-        }
-
-        args.putString(VacanciesFragment.SEARCH_TEXT, searchText);
+        args.putString(VacanciesFragment.SEARCH_REGION, regionsMap.get(autoCompleteText.getValue()));
+        args.putString(VacanciesFragment.SEARCH_TEXT, searchText.getValue());
         intent.putExtra(VacanciesActivity.SEARCH_KEY, args);
         mContext.startActivity(intent);
     }
 
 
-    void dispatchDetach(){
+    @Override
+    public void onCleared(){
         if (disposable != null){
             disposable.dispose();
         }
     }
 
-    public ObservableBoolean getIsErrorVisible(){
+    public MutableLiveData<Boolean> getIsErrorVisible(){
         return isErrorVisible;
     }
 
-    public ObservableBoolean getIsLoading(){
+    public MutableLiveData<Boolean> getIsLoading(){
         return isLoading;
     }
 
@@ -96,11 +103,7 @@ public class StartSearchViewModel{
         return onRefreshListener;
     }
 
-    public ObservableArrayList<String> getRegionList(){
-        return regionList;
-    }
-
-    public String getSearchText(){
+    public MutableLiveData<String> getSearchText(){
         return searchText;
     }
 
@@ -108,15 +111,23 @@ public class StartSearchViewModel{
         return mContext;
     }
 
-    public String getAutoCompleteText(){
+    public MutableLiveData<String> getAutoCompleteText(){
         return autoCompleteText;
     }
 
-    public void setSearchText(String searchText){
+    public MutableLiveData<List<String>> getRegionList(){
+        return regionList;
+    }
+
+    public void setRegionList(MutableLiveData<List<String>> regionList){
+        this.regionList = regionList;
+    }
+
+    public void setSearchText(MutableLiveData<String> searchText){
         this.searchText = searchText;
     }
 
-    public void setAutoCompleteText(String autoCompleteText){
+    public void setAutoCompleteText(MutableLiveData<String> autoCompleteText){
         this.autoCompleteText = autoCompleteText;
     }
 }

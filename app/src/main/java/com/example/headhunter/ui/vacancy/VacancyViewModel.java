@@ -5,6 +5,8 @@ import android.view.View;
 
 import androidx.databinding.ObservableBoolean;
 import androidx.databinding.ObservableField;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.headhunter.data.model.Vacancy;
@@ -14,73 +16,75 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class VacancyViewModel{
+public class VacancyViewModel extends ViewModel{
 
     private Disposable disposable;
     private String mVacancyId;
 
-    private ObservableField<String> vacancyName = new ObservableField<>();
-    private ObservableField<String> employerName = new ObservableField<>();
-    private ObservableField<String> salary = new ObservableField<>();
-    private ObservableField<String> vacancyDescription = new ObservableField<>();
+    private MutableLiveData<String> vacancyName = new MutableLiveData<>();
+    private MutableLiveData<String> employerName = new MutableLiveData<>();
+    private MutableLiveData<String> salary = new MutableLiveData<>();
+    private MutableLiveData<String> vacancyDescription = new MutableLiveData<>();
 
-    private ObservableBoolean isErrorVisible = new ObservableBoolean(false);
-    private ObservableBoolean isLoading = new ObservableBoolean(false);
+    private MutableLiveData<Boolean> isErrorVisible = new MutableLiveData();
+    private MutableLiveData<Boolean> isLoading = new MutableLiveData();
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener = () -> loadVacancy(mVacancyId);
 
-    VacancyViewModel(String vacancyId){
+    public VacancyViewModel(String vacancyId){
         mVacancyId = vacancyId;
+        loadVacancy(vacancyId);
     }
 
     void loadVacancy(String vacancyId){
         disposable = ApiUtils.getApiService().getVacancy(vacancyId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable1 -> isLoading.set(true))
-                .doFinally(() -> isLoading.set(false))
+                .doOnSubscribe(disposable1 -> isLoading.postValue(true))
+                .doFinally(() -> isLoading.postValue(false))
                 .subscribe(vacancy -> {
-                            isErrorVisible.set(false);
+                            isErrorVisible.postValue(false);
                             bind(vacancy);
                         },
-                        throwable -> isErrorVisible.set(true));
+                        throwable -> isErrorVisible.postValue(true));
     }
 
     public void bind(Vacancy vacancy){
-        vacancyName.set(vacancy.getName());
-        employerName.set(vacancy.getEmployer().getName());
-        salary.set(String.valueOf(vacancy.getSalary().getFrom())
+        vacancyName.postValue(vacancy.getName());
+        employerName.postValue(vacancy.getEmployer().getName());
+        salary.postValue(String.valueOf(vacancy.getSalary().getFrom())
                 .concat(" ")
                 .concat(vacancy.getSalary().getCurrency()));
-        vacancyDescription.set(Html.fromHtml(vacancy.getDescription()).toString());
+        vacancyDescription.postValue(Html.fromHtml(vacancy.getDescription()).toString());
     }
 
-    void dispatchDetach(){
+    @Override
+    public void onCleared(){
         if (disposable != null){
             disposable.dispose();
         }
     }
 
-    public ObservableField<String> getVacancyName(){
+    public MutableLiveData<String> getVacancyName(){
         return vacancyName;
     }
 
-    public ObservableField<String> getEmployerName(){
+    public MutableLiveData<String> getEmployerName(){
         return employerName;
     }
 
-    public ObservableField<String> getSalary(){
+    public MutableLiveData<String> getSalary(){
         return salary;
     }
 
-    public ObservableField<String> getVacancyDescription(){
+    public MutableLiveData<String> getVacancyDescription(){
         return vacancyDescription;
     }
 
-    public ObservableBoolean getIsErrorVisible(){
+    public MutableLiveData<Boolean> getIsErrorVisible(){
         return isErrorVisible;
     }
 
-    public ObservableBoolean getIsLoading(){
+    public MutableLiveData<Boolean> getIsLoading(){
         return isLoading;
     }
 

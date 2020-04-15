@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.headhunter.R;
@@ -22,6 +23,7 @@ import com.example.headhunter.databinding.StartSearchBinding;
 import com.example.headhunter.ui.vacancies.VacanciesActivity;
 import com.example.headhunter.ui.vacancies.VacanciesFragment;
 import com.example.headhunter.utils.ApiUtils;
+import com.example.headhunter.utils.factories.CustomSearchFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +45,9 @@ public class StartSearchFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context){
         super.onAttach(context);
-        startSearchViewModel = new StartSearchViewModel(context);
+
+        CustomSearchFactory factory = new CustomSearchFactory(context);
+        startSearchViewModel = ViewModelProviders.of(this, factory).get(StartSearchViewModel.class);
     }
 
     @Nullable
@@ -51,19 +55,7 @@ public class StartSearchFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         StartSearchBinding binding = StartSearchBinding.inflate(inflater, container, false);
         binding.setSearchModel(startSearchViewModel);
+        binding.setLifecycleOwner(this);
         return binding.getRoot();
     }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-        startSearchViewModel.loadRegions();
-    }
-
-    @Override
-    public void onDetach(){
-        startSearchViewModel.dispatchDetach();
-        super.onDetach();
-    }
-
 }

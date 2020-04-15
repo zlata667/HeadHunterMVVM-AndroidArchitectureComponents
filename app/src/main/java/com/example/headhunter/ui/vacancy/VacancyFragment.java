@@ -10,14 +10,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
+import com.example.headhunter.R;
 import com.example.headhunter.databinding.VacancyInfoBinding;
+import com.example.headhunter.utils.factories.CustomVacancyFactory;
 
 public class VacancyFragment extends Fragment{
 
     public static final String VACANCY_ID = "VACANCY_ID";
     private String vacancyId;
-
     private VacancyViewModel vacancyViewModel;
 
     static Fragment newInstance(Bundle args){
@@ -29,7 +31,11 @@ public class VacancyFragment extends Fragment{
     @Override
     public void onAttach(@NonNull Context context){
         super.onAttach(context);
-        vacancyViewModel = new VacancyViewModel(vacancyId);
+        if (getArguments() != null) {
+            vacancyId = getArguments().getString(VACANCY_ID);
+        }
+        CustomVacancyFactory factory = new CustomVacancyFactory(vacancyId);
+        vacancyViewModel = ViewModelProviders.of(this, factory).get(VacancyViewModel.class);
     }
 
     @Nullable
@@ -37,21 +43,7 @@ public class VacancyFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         VacancyInfoBinding binding = VacancyInfoBinding.inflate(inflater, container, false);
         binding.setVacancyModel(vacancyViewModel);
+        binding.setLifecycleOwner(this);
         return binding.getRoot();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-
-        if (getArguments() != null) vacancyId = getArguments().getString(VACANCY_ID);
-        if (getActivity() != null) getActivity().setTitle("Vacancy");
-        vacancyViewModel.loadVacancy(vacancyId);
-    }
-
-    @Override
-    public void onDetach(){
-        vacancyViewModel.dispatchDetach();
-        super.onDetach();
     }
 }

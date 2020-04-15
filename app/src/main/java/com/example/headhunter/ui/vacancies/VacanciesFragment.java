@@ -6,26 +6,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.example.headhunter.R;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.example.headhunter.databinding.VacanciesBinding;
 import com.example.headhunter.ui.vacancy.VacancyActivity;
 import com.example.headhunter.ui.vacancy.VacancyFragment;
-import com.example.headhunter.utils.ApiUtils;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
+import com.example.headhunter.utils.factories.CustomVacanciesFactory;
 
 public class VacanciesFragment extends Fragment{
 
@@ -52,7 +42,12 @@ public class VacanciesFragment extends Fragment{
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        vacanciesViewModel = new VacanciesViewModel(onItemClickListener, searchText, searchRegion);
+        if (getArguments() != null){
+            searchText = getArguments().getString(SEARCH_TEXT);
+            searchRegion = getArguments().getString(SEARCH_REGION);
+        }
+        CustomVacanciesFactory factory = new CustomVacanciesFactory(onItemClickListener, searchText, searchRegion);
+        vacanciesViewModel = ViewModelProviders.of(this, factory).get(VacanciesViewModel.class);
     }
 
     @Nullable
@@ -60,25 +55,7 @@ public class VacanciesFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         VacanciesBinding binding = VacanciesBinding.inflate(inflater, container, false);
         binding.setVm(vacanciesViewModel);
+        binding.setLifecycleOwner(this);
         return binding.getRoot();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState){
-        super.onActivityCreated(savedInstanceState);
-
-        if (getActivity() != null) getActivity().setTitle("Vacancies");
-
-        if (getArguments() != null){
-            searchText = getArguments().getString(SEARCH_TEXT);
-            searchRegion = getArguments().getString(SEARCH_REGION);
-        }
-        vacanciesViewModel.loadVacancies(searchText, searchRegion);
-    }
-
-    @Override
-    public void onDetach() {
-        vacanciesViewModel.dispatchDetach();
-        super.onDetach();
     }
 }

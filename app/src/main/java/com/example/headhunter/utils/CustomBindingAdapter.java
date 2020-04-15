@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import androidx.databinding.BindingAdapter;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,9 +51,9 @@ public class CustomBindingAdapter{
 
     @BindingAdapter("bind:autoCompleteData")
     public static void configureAutoCompleteTextView(AutoCompleteTextView autoCompleteTextView,
-                                                     ArrayList<String> items){
+                                                     MutableLiveData<List<String>> items){
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(autoCompleteTextView.getContext(),
-                R.layout.support_simple_spinner_dropdown_item, items);
+                R.layout.support_simple_spinner_dropdown_item, items.getValue());
         autoCompleteTextView.setAdapter(adapter);
     }
 

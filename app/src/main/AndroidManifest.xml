@@ -18,8 +18,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.vacancies.VacanciesActivity"/>
-        <activity android:name=".ui.vacancy.VacancyActivity" />
+        <activity android:name=".ui.vacancies.VacanciesActivity" android:label="@string/vacancies"/>
+        <activity android:name=".ui.vacancy.VacancyActivity" android:label="@string/vacancy" />
     </application>
 
 </manifest>
