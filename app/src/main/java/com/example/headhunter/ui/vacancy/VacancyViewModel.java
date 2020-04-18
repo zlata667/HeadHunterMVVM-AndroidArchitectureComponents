@@ -26,7 +26,8 @@ public class VacancyViewModel extends ViewModel{
     private MutableLiveData<String> salary = new MutableLiveData<>();
     private MutableLiveData<String> vacancyDescription = new MutableLiveData<>();
 
-    private MutableLiveData<Boolean> isErrorVisible = new MutableLiveData();
+    private MutableLiveData<Integer> isErrorVisible = new MutableLiveData();
+    private MutableLiveData<Integer> isVacancyVisible = new MutableLiveData();
     private MutableLiveData<Boolean> isLoading = new MutableLiveData();
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener = () -> loadVacancy(mVacancyId);
 
@@ -42,18 +43,24 @@ public class VacancyViewModel extends ViewModel{
                 .doOnSubscribe(disposable1 -> isLoading.postValue(true))
                 .doFinally(() -> isLoading.postValue(false))
                 .subscribe(vacancy -> {
-                            isErrorVisible.postValue(false);
+                            isErrorVisible.postValue(View.GONE);
+                            isVacancyVisible.postValue(View.VISIBLE);
                             bind(vacancy);
                         },
-                        throwable -> isErrorVisible.postValue(true));
+                        throwable ->{
+                            isErrorVisible.postValue(View.VISIBLE);
+                            isVacancyVisible.postValue(View.GONE);
+                        });
     }
 
     public void bind(Vacancy vacancy){
         vacancyName.postValue(vacancy.getName());
         employerName.postValue(vacancy.getEmployer().getName());
-        salary.postValue(String.valueOf(vacancy.getSalary().getFrom())
-                .concat(" ")
-                .concat(vacancy.getSalary().getCurrency()));
+        if (vacancy.getSalary() != null){
+            salary.postValue(String.valueOf(vacancy.getSalary().getFrom())
+                    .concat(" ")
+                    .concat(vacancy.getSalary().getCurrency()));
+        }
         vacancyDescription.postValue(Html.fromHtml(vacancy.getDescription()).toString());
     }
 
@@ -80,8 +87,12 @@ public class VacancyViewModel extends ViewModel{
         return vacancyDescription;
     }
 
-    public MutableLiveData<Boolean> getIsErrorVisible(){
+    public MutableLiveData<Integer> getIsErrorVisible(){
         return isErrorVisible;
+    }
+
+    public MutableLiveData<Integer> getIsVacancyVisible(){
+        return isVacancyVisible;
     }
 
     public MutableLiveData<Boolean> getIsLoading(){

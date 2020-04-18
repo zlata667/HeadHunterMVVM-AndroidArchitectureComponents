@@ -5,10 +5,6 @@
 
     <data class="VacancyInfoBinding">
 
-        <import
-            alias="V"
-            type="android.view.View" />
-
         <variable
             name="vacancyModel"
             type="com.example.headhunter.ui.vacancy.VacancyViewModel" />
@@ -32,19 +28,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="8dp"
-                    android:visibility="visible"
+                    android:visibility="@{vacancyModel.isVacancyVisible}"
                     android:scrollbars="none">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
                         android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/vacancy_name"
+                            android:textColor="@color/vacancy_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@{vacancyModel.vacancyName}"
+                            android:paddingBottom="8dp"
                             android:textSize="20sp" />
 
                         <TextView
@@ -61,6 +61,7 @@
                             android:layout_height="wrap_content"
                             android:text="@{vacancyModel.salary}"
                             android:textAlignment="viewEnd"
+                            android:paddingBottom="8dp"
                             android:textSize="15sp" />
 
 
@@ -68,8 +69,10 @@
                             android:id="@+id/vacancy_description"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:textColor="#333333"
+                            android:textAlignment="gravity"
                             android:text="@{vacancyModel.vacancyDescription}"
-                            android:textSize="14sp" />
+                            android:textSize="15sp" />
 
 
                     </LinearLayout>
@@ -77,7 +80,7 @@
 
             <include
                 layout="@layout/v_error"
-                android:visibility="@{vacancyModel.isErrorVisible ? V.VISIBLE : V.GONE}" />
+                android:visibility="@{vacancyModel.isErrorVisible}" />
 
         </LinearLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

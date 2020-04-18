@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">HeadHunter</string>
-    <string name="error">Something went wrong. Try again.</string>
-    <string name="vacancy">Vacancy</string>
-    <string name="vacancies">Vacancies</string>
+    <string name="error">Что-то пошло не так. Проверьте подключение к сети.</string>
+    <string name="vacancy">Вакансия</string>
+    <string name="vacancies">Все вакансии</string>
+    <string name="hh_icon">hh_icon</string>
+    <string name="find_vacancy">Найдите свою вакансию</string>
+    <string name="choose_region">Выберите регион</string>
+    <string name="find">Найти</string>
+    <string name="error_regions">Не удалось загрузить список регионов</string>
+    <string name="search_word">Введите слово для поиска</string>
 </resources>

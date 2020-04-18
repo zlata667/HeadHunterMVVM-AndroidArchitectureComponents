@@ -5,10 +5,6 @@
 
     <data class="VacanciesBinding">
 
-        <import
-            alias="V"
-            type="android.view.View" />
-
         <variable
             name="vm"
             type="com.example.headhunter.ui.vacancies.VacanciesViewModel" />
@@ -34,11 +30,11 @@
                 android:layout_height="match_parent"
                 bind:data="@{vm.vacancies}"
                 bind:clickHandler="@{vm.onItemClickListener}"
-                android:visibility="@{vm.isErrorVisible ? V.GONE : V.VISIBLE}" />
+                android:visibility="@{vm.isRecyclerVisible}" />
 
             <include
                 layout="@layout/v_error"
-                android:visibility="@{vm.isErrorVisible ? V.VISIBLE : V.GONE}" />
+                android:visibility="@{vm.isErrorVisible}" />
 
         </LinearLayout>
 

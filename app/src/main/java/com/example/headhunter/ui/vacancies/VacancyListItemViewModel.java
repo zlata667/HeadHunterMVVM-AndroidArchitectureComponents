@@ -10,6 +10,7 @@ public class VacancyListItemViewModel{
     private String mTitle;
     private String mDescription;
     private String mCity;
+    private String mEmployer;
 
     public VacancyListItemViewModel(Vacancies.ItemsBean vacancy){
         mTitle = vacancy.getName();

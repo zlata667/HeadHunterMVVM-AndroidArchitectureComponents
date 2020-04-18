@@ -2,6 +2,7 @@ package com.example.headhunter.ui.startApp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -36,7 +37,7 @@ public class StartSearchViewModel extends ViewModel{
     private MutableLiveData<String> autoCompleteText = new MutableLiveData<>();
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener = () -> loadRegions();
 
-    private MutableLiveData<Boolean> isErrorVisible = new MutableLiveData<>();
+    private MutableLiveData<Integer> errorVisibility = new MutableLiveData<>();
     private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
     private Map<String, String> regionsMap = new HashMap<>();
@@ -57,10 +58,10 @@ public class StartSearchViewModel extends ViewModel{
                 .doFinally(() -> isLoading.postValue(false))
                 .subscribe(
                         countries -> {
-                            isErrorVisible.postValue(false);
+                            errorVisibility.postValue(View.GONE);
                             bind(countries);
                         },
-                        throwable -> isErrorVisible.postValue(true)
+                        throwable -> errorVisibility.postValue(View.VISIBLE)
                 );
     }
 
@@ -91,8 +92,8 @@ public class StartSearchViewModel extends ViewModel{
         }
     }
 
-    public MutableLiveData<Boolean> getIsErrorVisible(){
-        return isErrorVisible;
+    public MutableLiveData<Integer> getErrorVisibility(){
+        return errorVisibility;
     }
 
     public MutableLiveData<Boolean> getIsLoading(){

@@ -1,5 +1,6 @@
 package com.example.headhunter.ui.vacancies;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -57,5 +58,13 @@ public class VacanciesFragment extends Fragment{
         binding.setVm(vacanciesViewModel);
         binding.setLifecycleOwner(this);
         return binding.getRoot();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        if (getActivity() != null && searchText != null){
+            getActivity().setTitle(searchText);
+        }
     }
 }

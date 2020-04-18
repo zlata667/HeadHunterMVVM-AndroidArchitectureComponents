@@ -5,10 +5,6 @@
 
     <data class="StartSearchBinding">
 
-        <import
-            alias="V"
-            type="android.view.View" />
-
         <variable
             name="searchModel"
             type="com.example.headhunter.ui.startApp.StartSearchViewModel" />
@@ -26,13 +22,26 @@
             android:orientation="vertical"
             android:id="@+id/view_search"
             android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <ImageView
+                android:paddingTop="20dp"
+                android:paddingBottom="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/hh_icon"
+                android:src="@drawable/ic_hh" />
+
             <TextView
                 android:id="@+id/search_text"
-                android:text="Найдите свою вакансию"
+                android:text="@string/find_vacancy"
                 android:textSize="20sp"
+                android:paddingBottom="20dp"
                 android:textAlignment="center"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="match_parent"
@@ -41,7 +50,9 @@
             <EditText
                 android:id="@+id/et_search"
                 android:text="@={searchModel.searchText}"
+                android:hint="@string/search_word"
                 android:textAlignment="center"
+                android:singleLine="true"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -50,7 +61,8 @@
                 android:id="@+id/et_city"
                 bind:autoCompleteData="@{searchModel.regionList}"
                 android:text="@={searchModel.autoCompleteText}"
-                android:hint="Выберите регион"
+                android:hint="@string/choose_region"
+                android:singleLine="true"
                 android:textAlignment="center"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="match_parent"
@@ -59,7 +71,7 @@
             <Button
                 android:id="@+id/btn_search"
                 android:onClick="@{() -> searchModel.openVacanciesFragment()}"
-                android:text="Найти"
+                android:text="@string/find"
                 android:textAlignment="center"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="match_parent"
@@ -67,8 +79,8 @@
 
             <TextView
                 android:id="@+id/error_text"
-                android:text="Не удалось загрузить список регионов"
-                android:visibility="gone"
+                android:text="@string/error_regions"
+                android:visibility="@{searchModel.errorVisibility}"
                 android:textSize="15sp"
                 android:textAlignment="center"
                 android:layout_gravity="center_horizontal"

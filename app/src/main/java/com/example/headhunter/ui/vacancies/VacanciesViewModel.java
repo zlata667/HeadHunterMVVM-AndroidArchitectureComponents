@@ -27,7 +27,8 @@ public class VacanciesViewModel extends ViewModel{
     private VacanciesAdapter.OnItemClickListener mOnItemClickListener;
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener = () -> loadVacancies(mSearchText, mSearchRegion);
 
-    private MutableLiveData<Boolean> isErrorVisible = new MutableLiveData<>();
+    private MutableLiveData<Integer> isErrorVisible = new MutableLiveData<>();
+    private MutableLiveData<Integer> isRecyclerVisible = new MutableLiveData<>();
     private MutableLiveData<List<Vacancies.ItemsBean>> mVacancies = new MutableLiveData<>();
     private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
 
@@ -50,10 +51,14 @@ public class VacanciesViewModel extends ViewModel{
                 .doFinally(() -> isLoading.postValue(false))
                 .subscribe(
                         vacancies -> {
-                            isErrorVisible.postValue(false);
+                            isErrorVisible.postValue(View.GONE);
+                            isRecyclerVisible.postValue(View.VISIBLE);
                             mVacancies.postValue(vacancies.getItems());
                         },
-                        throwable -> isErrorVisible.postValue(true)
+                        throwable ->{
+                            isErrorVisible.postValue(View.VISIBLE);
+                            isRecyclerVisible.postValue(View.GONE);
+                        }
                 );
     }
 
@@ -68,8 +73,12 @@ public class VacanciesViewModel extends ViewModel{
         return mOnItemClickListener;
     }
 
-    public MutableLiveData<Boolean> getIsErrorVisible(){
+    public MutableLiveData<Integer> getIsErrorVisible(){
         return isErrorVisible;
+    }
+
+    public MutableLiveData<Integer> getIsRecyclerVisible(){
+        return isRecyclerVisible;
     }
 
     public MutableLiveData<List<Vacancies.ItemsBean>> getVacancies(){
