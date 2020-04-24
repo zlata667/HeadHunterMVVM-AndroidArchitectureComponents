@@ -13,6 +13,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.headhunter.R;
 import com.example.headhunter.data.model.Country;
 import com.example.headhunter.ui.vacancies.VacanciesActivity;
 import com.example.headhunter.ui.vacancies.VacanciesFragment;
@@ -32,7 +33,6 @@ import io.reactivex.schedulers.Schedulers;
 public class StartSearchViewModel extends ViewModel{
 
     private Disposable disposable;
-    private Context mContext;
     private MutableLiveData<String> searchText = new MutableLiveData<>();
     private MutableLiveData<String> autoCompleteText = new MutableLiveData<>();
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener = () -> loadRegions();
@@ -44,13 +44,12 @@ public class StartSearchViewModel extends ViewModel{
     private List<String> list = new ArrayList<>();
     private MutableLiveData<List<String>> regionList = new MutableLiveData<>();
 
-    public StartSearchViewModel(Context context){
-        mContext = context;
+    public StartSearchViewModel(){
         regionList.setValue(new ArrayList<>());
         loadRegions();
     }
 
-    public void loadRegions(){
+    private void loadRegions(){
         disposable = ApiUtils.getApiService().getCities()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -75,13 +74,15 @@ public class StartSearchViewModel extends ViewModel{
         regionList.postValue(list);
     }
 
-    public void openVacanciesFragment(){
-        Intent intent = new Intent(mContext, VacanciesActivity.class);
+    public void openVacanciesFragment(Context context){
+        Intent intent = new Intent(context, VacanciesActivity.class);
         Bundle args = new Bundle();
-        args.putString(VacanciesFragment.SEARCH_REGION, regionsMap.get(autoCompleteText.getValue()));
+        args.putString(VacanciesFragment.SEARCH_REGION_ID, regionsMap.get(autoCompleteText.getValue()));
+        args.putString(VacanciesFragment.SEARCH_REGION_NAME, autoCompleteText.getValue());
         args.putString(VacanciesFragment.SEARCH_TEXT, searchText.getValue());
+        args.putString(VacanciesFragment.SEARCH_EXPERIENCE_ID, null);
         intent.putExtra(VacanciesActivity.SEARCH_KEY, args);
-        mContext.startActivity(intent);
+        context.startActivity(intent);
     }
 
 
@@ -106,10 +107,6 @@ public class StartSearchViewModel extends ViewModel{
 
     public MutableLiveData<String> getSearchText(){
         return searchText;
-    }
-
-    public Context getView(){
-        return mContext;
     }
 
     public MutableLiveData<String> getAutoCompleteText(){

@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.vacancies.VacanciesActivity" android:label="@string/vacancies"/>
-        <activity android:name=".ui.vacancy.VacancyActivity" android:label="@string/vacancy" />
+        <activity android:name=".ui.vacancy.VacancyActivity" android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 
 </manifest>

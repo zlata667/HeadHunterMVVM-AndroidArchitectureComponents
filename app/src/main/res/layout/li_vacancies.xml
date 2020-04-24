@@ -1,48 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data class="VacancyBinding">
 
         <variable
             name="vacancy"
             type="com.example.headhunter.ui.vacancies.VacancyListItemViewModel" />
-        
+
         <variable
             name="onItemClickListener"
             type="com.example.headhunter.ui.vacancies.VacanciesAdapter.OnItemClickListener" />
     </data>
 
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:onClick="@{()->onItemClickListener.onItemClick(vacancy.id)}"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp">
+        app:cardCornerRadius="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{vacancy.title}"
-            android:textColor="@color/vacancy_title"
-            android:textSize="20sp" />
+        <LinearLayout
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_city"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{vacancy.city}" />
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{vacancy.title}"
+                android:textColor="@color/vacancy_title"
+                android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/tv_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLines="4"
-            android:text="@{vacancy.description}" />
+            <TextView
+                android:id="@+id/tv_city"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{vacancy.city}" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tv_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="4"
+                android:text="@{vacancy.description}" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </layout>

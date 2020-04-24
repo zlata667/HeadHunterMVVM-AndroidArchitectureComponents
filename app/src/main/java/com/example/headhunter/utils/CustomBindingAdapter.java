@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 
 import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.MutableLiveData;
@@ -19,6 +20,8 @@ import com.example.headhunter.data.model.Vacancies;
 import com.example.headhunter.ui.vacancies.VacanciesActivity;
 import com.example.headhunter.ui.vacancies.VacanciesAdapter;
 import com.example.headhunter.ui.vacancies.VacanciesFragment;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +32,7 @@ public class CustomBindingAdapter{
     @BindingAdapter({"bind:data", "bind:clickHandler"})
     public static void configureRecyclerView(RecyclerView recyclerView, List<Vacancies.ItemsBean> vacancies,
                                              VacanciesAdapter.OnItemClickListener onItemClickListener){
-
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
-                DividerItemDecoration.VERTICAL);
-        recyclerView.addItemDecoration(dividerItemDecoration);
-
         VacanciesAdapter adapter = new VacanciesAdapter(vacancies, onItemClickListener);
         recyclerView.setAdapter(adapter);
 
@@ -57,5 +54,9 @@ public class CustomBindingAdapter{
         autoCompleteTextView.setAdapter(adapter);
     }
 
+    @BindingAdapter("bind:image")
+    public static void picassoLogo(ImageView imageView, String url){
+        Picasso.get().load(url).into(imageView);
+    }
 
 }

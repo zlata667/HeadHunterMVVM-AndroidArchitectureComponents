@@ -1,7 +1,11 @@
 package com.example.headhunter.ui.vacancies;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.example.headhunter.R;
 import com.example.headhunter.common.SingleFragmentActivity;
+import com.example.headhunter.ui.startApp.StartSearchFragment;
 import com.example.headhunter.ui.vacancy.VacancyFragment;
 
 public class VacanciesActivity extends SingleFragmentActivity{

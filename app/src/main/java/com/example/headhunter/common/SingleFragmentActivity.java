@@ -1,6 +1,7 @@
 package com.example.headhunter.common;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,7 +39,6 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
         if (addToBackStack){
             transaction.addToBackStack(fragment.getClass().getSimpleName());
         }
-
         transaction.commit();
     }
 

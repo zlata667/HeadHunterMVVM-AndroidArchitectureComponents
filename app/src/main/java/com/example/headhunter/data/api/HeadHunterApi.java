@@ -15,7 +15,8 @@ import retrofit2.http.Query;
 public interface HeadHunterApi{
 
     @GET("/vacancies")
-    Single<Vacancies> getVacancies(@Query("text") String searchText, @Query("area") String searchArea);
+    Single<Vacancies> getVacancies(@Query("text") String searchText, @Query("area") String searchArea,
+                                   @Query("experience") String searchExperience);
 
     @GET("/vacancies/{vacancy_id}")
     Single<Vacancy> getVacancy(@Path("vacancy_id") String vacancyId);

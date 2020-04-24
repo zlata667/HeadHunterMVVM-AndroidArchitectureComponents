@@ -25,6 +25,7 @@ public class VacancyViewModel extends ViewModel{
     private MutableLiveData<String> employerName = new MutableLiveData<>();
     private MutableLiveData<String> salary = new MutableLiveData<>();
     private MutableLiveData<String> vacancyDescription = new MutableLiveData<>();
+    private MutableLiveData<String> vacancyLogo = new MutableLiveData<>();
 
     private MutableLiveData<Integer> isErrorVisible = new MutableLiveData();
     private MutableLiveData<Integer> isVacancyVisible = new MutableLiveData();
@@ -62,6 +63,7 @@ public class VacancyViewModel extends ViewModel{
                     .concat(vacancy.getSalary().getCurrency()));
         }
         vacancyDescription.postValue(Html.fromHtml(vacancy.getDescription()).toString());
+        vacancyLogo.postValue(vacancy.getEmployer().getLogo_urls().getOriginal());
     }
 
     @Override
@@ -101,5 +103,9 @@ public class VacancyViewModel extends ViewModel{
 
     public SwipeRefreshLayout.OnRefreshListener getOnRefreshListener(){
         return onRefreshListener;
+    }
+
+    public MutableLiveData<String> getVacancyLogo(){
+        return vacancyLogo;
     }
 }

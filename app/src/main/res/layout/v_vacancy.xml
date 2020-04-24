@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:bind="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="vacancyModel"
+            type="com.example.headhunter.ui.vacancy.VacancyViewModel" />
+    </data>
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="8dp">
+
+                <ImageView
+                    android:id="@+id/employer_logo"
+                    bind:image="@{vacancyModel.vacancyLogo}"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:scaleType="fitXY" />
+
+                <TextView
+                    android:id="@+id/vacancy_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/employer_logo"
+                    android:paddingBottom="8dp"
+                    android:text="@{vacancyModel.vacancyName}"
+                    android:textAlignment="viewEnd"
+                    android:textColor="@color/vacancy_title"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/employer_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/vacancy_name"
+                    android:layout_toEndOf="@id/employer_logo"
+                    android:text="@{vacancyModel.employerName}"
+                    android:textAlignment="viewEnd"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/salary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/employer_name"
+                    android:layout_toEndOf="@id/employer_logo"
+                    android:paddingBottom="8dp"
+                    android:text="@{vacancyModel.salary}"
+                    android:textAlignment="viewEnd"
+                    android:textSize="15sp" />
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/view_vacancy"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:scrollbars="none">
+
+            <TextView
+                android:id="@+id/vacancy_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:text="@{vacancyModel.vacancyDescription}"
+                android:textAlignment="gravity"
+                android:textColor="#333333"
+                android:textSize="15sp" />
+
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+
+</layout>

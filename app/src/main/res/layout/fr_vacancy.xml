@@ -13,74 +13,24 @@
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresher"
-        bind:onRefresh="@{vacancyModel.onRefreshListener}"
-        bind:refreshState="@{vacancyModel.isLoading}"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        bind:onRefresh="@{vacancyModel.onRefreshListener}"
+        bind:refreshState="@{vacancyModel.isLoading}">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-                <androidx.core.widget.NestedScrollView
-                    android:id="@+id/view_vacancy"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="8dp"
-                    android:visibility="@{vacancyModel.isVacancyVisible}"
-                    android:scrollbars="none">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/vacancy_name"
-                            android:textColor="@color/vacancy_title"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@{vacancyModel.vacancyName}"
-                            android:paddingBottom="8dp"
-                            android:textSize="20sp" />
-
-                        <TextView
-                            android:id="@+id/employer_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@{vacancyModel.employerName}"
-                            android:textAlignment="viewEnd"
-                            android:textSize="15sp" />
-
-                        <TextView
-                            android:id="@+id/salary"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="@{vacancyModel.salary}"
-                            android:textAlignment="viewEnd"
-                            android:paddingBottom="8dp"
-                            android:textSize="15sp" />
-
-
-                        <TextView
-                            android:id="@+id/vacancy_description"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#333333"
-                            android:textAlignment="gravity"
-                            android:text="@{vacancyModel.vacancyDescription}"
-                            android:textSize="15sp" />
-
-
-                    </LinearLayout>
-                </androidx.core.widget.NestedScrollView>
+            <include
+                layout="@layout/v_vacancy"
+                bind:vacancyModel="@{vacancyModel}"
+                android:visibility="@{vacancyModel.isVacancyVisible.getValue()}"/>
 
             <include
                 layout="@layout/v_error"
-                android:visibility="@{vacancyModel.isErrorVisible}" />
+                android:visibility="@{vacancyModel.isErrorVisible.getValue()}" />
 
         </LinearLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

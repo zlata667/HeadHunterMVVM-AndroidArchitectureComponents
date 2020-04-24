@@ -70,9 +70,10 @@
 
             <Button
                 android:id="@+id/btn_search"
-                android:onClick="@{() -> searchModel.openVacanciesFragment()}"
+                android:onClick="@{v -> searchModel.openVacanciesFragment(context)}"
                 android:text="@string/find"
                 android:textAlignment="center"
+                android:background="@drawable/button"
                 android:layout_gravity="center_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

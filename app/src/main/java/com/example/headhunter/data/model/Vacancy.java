@@ -69,12 +69,35 @@ public class Vacancy{
 
         private String name;
 
+        private LogoUrlsBean logo_urls;
+
+        public LogoUrlsBean getLogo_urls(){
+            return logo_urls;
+        }
+
+        public void setLogo_urls(LogoUrlsBean logo_urls){
+            this.logo_urls = logo_urls;
+        }
+
         public String getName(){
             return name;
         }
 
         public void setName(String name){
             this.name = name;
+        }
+
+        public static class LogoUrlsBean{
+
+            private String original;
+
+            public String getOriginal(){
+                return original;
+            }
+
+            public void setOriginal(String original){
+                this.original = original;
+            }
         }
     }
 }
