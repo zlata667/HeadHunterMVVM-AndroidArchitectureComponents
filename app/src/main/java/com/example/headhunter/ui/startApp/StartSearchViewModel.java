@@ -21,6 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.headhunter.R;
 import com.example.headhunter.data.model.Country;
+import com.example.headhunter.ui.login.LoginActivity;
 import com.example.headhunter.ui.vacancies.VacanciesActivity;
 import com.example.headhunter.ui.vacancies.VacanciesFragment;
 import com.example.headhunter.utils.ApiUtils;
@@ -106,6 +107,11 @@ public class StartSearchViewModel extends AndroidViewModel{
         args.putString(VacanciesFragment.SEARCH_TEXT, searchText.getValue());
         args.putString(VacanciesFragment.SEARCH_EXPERIENCE_ID, null);
         intent.putExtra(VacanciesActivity.SEARCH_KEY, args);
+        context.startActivity(intent);
+    }
+
+    public void openLoginFragment(Context context){
+        Intent intent = new Intent(context, LoginActivity.class);
         context.startActivity(intent);
     }
 
