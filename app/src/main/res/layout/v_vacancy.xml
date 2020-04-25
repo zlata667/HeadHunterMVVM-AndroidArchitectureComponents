@@ -30,9 +30,10 @@
                 <ImageView
                     android:id="@+id/employer_logo"
                     bind:image="@{vacancyModel.vacancyLogo}"
+
                     android:layout_width="100dp"
-                    android:layout_height="50dp"
-                    android:scaleType="fitXY" />
+                    android:layout_height="100dp"
+                    android:scaleType="centerInside" />
 
                 <TextView
                     android:id="@+id/vacancy_name"

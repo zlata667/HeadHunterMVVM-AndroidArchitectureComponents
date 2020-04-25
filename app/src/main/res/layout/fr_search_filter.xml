@@ -6,7 +6,7 @@
 
         <variable
             name="filterVm"
-            type="com.example.headhunter.ui.vacancies.FilterDialogViewModel" />
+            type="com.example.headhunter.ui.vacancies.VacanciesViewModel" />
 
     </data>
 
@@ -50,7 +50,9 @@
 
                 <EditText
                     android:id="@+id/et_filter_word"
+                    android:maxLines="1"
                     android:text="@={filterVm.searchText}"
+                    android:selectAllOnFocus="true"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
@@ -68,7 +70,7 @@
                     android:padding="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:checkedButton="@{filterVm.checkedId}"
+                    android:checkedButton="@={filterVm.checkedId}"
                     android:onCheckedChanged="@{filterVm.onExperienceChanged}"
                     android:orientation="vertical">
 
@@ -106,7 +108,9 @@
 
                 <AutoCompleteTextView
                     android:hint="Выберите регион"
-                    android:text="@={filterVm.regionName}"
+                    bind:autoCompleteData="@{filterVm.regionList}"
+                    android:text="@={filterVm.searchRegionName}"
+                    android:maxLines="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -120,7 +124,7 @@
                     android:layout_marginBottom="10dp"
                     android:textColor="#ffffff"
                     android:background="@drawable/button"
-                    android:onClick="@{() -> filterVm.onButtonClick(context)}"
+                    android:onClick="@{() -> filterVm.closeDialogFragment()}"
                     android:paddingStart="50dp"
                     android:paddingEnd="50dp"
                     android:text="Найти" />

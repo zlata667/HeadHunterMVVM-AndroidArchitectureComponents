@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory;
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory;
 import androidx.lifecycle.ViewModelProviders;
 
@@ -25,8 +28,7 @@ public class StartSearchFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context){
         super.onAttach(context);
-
-        NewInstanceFactory factory = new NewInstanceFactory();
+        AndroidViewModelFactory factory = new AndroidViewModelFactory(getActivity().getApplication());
         startSearchViewModel = ViewModelProviders.of(this, factory).get(StartSearchViewModel.class);
     }
 

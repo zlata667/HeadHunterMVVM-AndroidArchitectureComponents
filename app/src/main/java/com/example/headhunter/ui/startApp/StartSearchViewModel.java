@@ -1,14 +1,20 @@
 package com.example.headhunter.ui.startApp;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.ObservableArrayList;
 import androidx.databinding.ObservableBoolean;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -18,6 +24,8 @@ import com.example.headhunter.data.model.Country;
 import com.example.headhunter.ui.vacancies.VacanciesActivity;
 import com.example.headhunter.ui.vacancies.VacanciesFragment;
 import com.example.headhunter.utils.ApiUtils;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +38,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class StartSearchViewModel extends ViewModel{
+public class StartSearchViewModel extends AndroidViewModel{
 
     private Disposable disposable;
     private MutableLiveData<String> searchText = new MutableLiveData<>();
@@ -44,7 +52,8 @@ public class StartSearchViewModel extends ViewModel{
     private List<String> list = new ArrayList<>();
     private MutableLiveData<List<String>> regionList = new MutableLiveData<>();
 
-    public StartSearchViewModel(){
+    public StartSearchViewModel(@NonNull Application application){
+        super(application);
         regionList.setValue(new ArrayList<>());
         loadRegions();
     }
@@ -71,14 +80,29 @@ public class StartSearchViewModel extends ViewModel{
                 regionsMap.put(region.getName(), region.getId());
             }
         }
+        saveRegionMap(regionsMap);
         regionList.postValue(list);
+    }
+
+    private void saveRegionMap(Map<String, String> regionsMap){
+        SharedPreferences sharedPreferences = getApplication().getSharedPreferences("RegionsMap", Context.MODE_PRIVATE);
+        if (sharedPreferences != null){
+            JSONObject jsonObject = new JSONObject(regionsMap);
+            String jsonString = jsonObject.toString();
+            Editor editor = sharedPreferences.edit();
+            editor.remove("Map").apply();
+            editor.putString("Map", jsonString);
+            editor.commit();
+        }
     }
 
     public void openVacanciesFragment(Context context){
         Intent intent = new Intent(context, VacanciesActivity.class);
         Bundle args = new Bundle();
-        args.putString(VacanciesFragment.SEARCH_REGION_ID, regionsMap.get(autoCompleteText.getValue()));
-        args.putString(VacanciesFragment.SEARCH_REGION_NAME, autoCompleteText.getValue());
+
+        if (regionsMap.containsKey(autoCompleteText.getValue())){
+            args.putString(VacanciesFragment.SEARCH_REGION_NAME, autoCompleteText.getValue());
+        }
         args.putString(VacanciesFragment.SEARCH_TEXT, searchText.getValue());
         args.putString(VacanciesFragment.SEARCH_EXPERIENCE_ID, null);
         intent.putExtra(VacanciesActivity.SEARCH_KEY, args);

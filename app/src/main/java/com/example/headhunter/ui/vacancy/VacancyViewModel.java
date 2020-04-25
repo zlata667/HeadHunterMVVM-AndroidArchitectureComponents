@@ -63,7 +63,9 @@ public class VacancyViewModel extends ViewModel{
                     .concat(vacancy.getSalary().getCurrency()));
         }
         vacancyDescription.postValue(Html.fromHtml(vacancy.getDescription()).toString());
-        vacancyLogo.postValue(vacancy.getEmployer().getLogo_urls().getOriginal());
+        if (vacancy.getEmployer().getLogo_urls() != null) {
+            vacancyLogo.postValue(vacancy.getEmployer().getLogo_urls().getOriginal());
+        }
     }
 
     @Override
