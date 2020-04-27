@@ -9,4 +9,6 @@
     <string name="find">Найти</string>
     <string name="error_regions">Не удалось загрузить список регионов</string>
     <string name="search_word">Введите слово для поиска</string>
+    <string name="search_settings">Настроить поиск</string>
+    <string name="experience">Опыт работы:</string>
 </resources>

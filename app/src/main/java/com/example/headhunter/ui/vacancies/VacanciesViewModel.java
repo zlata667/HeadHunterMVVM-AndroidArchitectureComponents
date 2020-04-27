@@ -1,54 +1,34 @@
 package com.example.headhunter.ui.vacancies;
 
-import android.app.Activity;
 import android.app.Application;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.ObservableArrayList;
-import androidx.databinding.ObservableBoolean;
-import androidx.databinding.ObservableInt;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.headhunter.R;
 import com.example.headhunter.common.SingleLiveEvent;
 import com.example.headhunter.data.model.Vacancies;
 import com.example.headhunter.utils.ApiUtils;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.zip.Checksum;
+import java.util.TreeMap;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.Nullable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -69,8 +49,8 @@ public class VacanciesViewModel extends AndroidViewModel{
     private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
     private MutableLiveData<Integer> checkedId = new MutableLiveData<>();
 
-    private Map<String, Integer> experienceMap = new HashMap<>();
-    private Map<String, String> regionMap;
+    private LinkedHashMap<String, String> experienceMap;
+    private LinkedHashMap<String, String> regionMap;
 
     private Disposable disposable;
     private VacanciesAdapter.OnItemClickListener mOnItemClickListener;
@@ -83,22 +63,24 @@ public class VacanciesViewModel extends AndroidViewModel{
         mVacancies.setValue(new ArrayList<>());
         mOnItemClickListener = onItemClickListener;
 
-        regionMap = getRegionMap();
+        experienceMap = getMapFromSharedPreferences("ExperienceMap");
+        regionMap = getMapFromSharedPreferences("RegionMap");
         regionList.setValue(new ArrayList<String>(regionMap.keySet()));
         loadVacancies(searchText, searchRegionName, searchExperienceId);
 
         mSearchRegionId.setValue(regionMap.get(searchRegionName));
         mSearchRegionName.setValue(searchRegionName);
-
-        experienceMap.put(null, R.id.rb_exp_all);
-        experienceMap.put("noExperience", R.id.rb_exp_0);
-        experienceMap.put("between1And3", R.id.rb_exp_1_3);
-        experienceMap.put("between3And6", R.id.rb_exp_3_6);
-        experienceMap.put("moreThan6", R.id.rb_exp_6);
-        checkedId.setValue(experienceMap.get(searchExperienceId));
+        checkedId.setValue(Math.abs("Показать все".hashCode()));
     }
 
     void loadVacancies(String searchText, String searchRegionName, String searchExperience){
+       if (searchExperience != null){
+           for (Entry<String, String> entry : experienceMap.entrySet()){
+               if (entry.getValue() != null && entry.getValue().equals(searchExperience)){
+                   checkedId.setValue(Math.abs(entry.getKey().hashCode()));
+               }
+           }
+       }
         mSearchText.setValue(searchText);
         mExperienceId.setValue(searchExperience);
         mSearchRegionId.setValue(regionMap.get(searchRegionName));
@@ -123,11 +105,8 @@ public class VacanciesViewModel extends AndroidViewModel{
     }
 
     public void onExperienceChanged(RadioGroup radioGroup, int id){
-        for (Entry<String, Integer> entry : experienceMap.entrySet()){
-            if (entry.getValue().equals(id)){
-                mExperienceId.postValue(entry.getKey());
-            }
-        }
+        RadioButton selectedButton = radioGroup.findViewById(id);
+        mExperienceId.postValue(experienceMap.get(selectedButton.getText()));
     }
 
     public void openDialogFragment(){
@@ -138,24 +117,24 @@ public class VacanciesViewModel extends AndroidViewModel{
         closeDialog.call();
     }
 
-    private Map<String, String> getRegionMap(){
-        Map<String, String> regionMap = new HashMap<>();
-        SharedPreferences sharedPreferences = getApplication().getSharedPreferences("RegionsMap", Context.MODE_PRIVATE);
+    private LinkedHashMap<String, String> getMapFromSharedPreferences(String name){
+        LinkedHashMap<String, String> map = new LinkedHashMap<>();
+        SharedPreferences sharedPreferences = getApplication().getSharedPreferences(name, Context.MODE_PRIVATE);
         try{
             if (sharedPreferences != null){
-                String jsonString = sharedPreferences.getString("Map", (new JSONObject()).toString());
+                String jsonString = sharedPreferences.getString(name, (new JSONObject()).toString());
                 JSONObject jsonObject = new JSONObject(jsonString);
                 Iterator<String> keysItr = jsonObject.keys();
                 while(keysItr.hasNext()) {
                     String key = keysItr.next();
                     String value = (String) jsonObject.get(key);
-                    regionMap.put(key, value);
+                    map.put(key, value);
                 }
             }
         }catch (Exception e){
             e.printStackTrace();
         }
-        return regionMap;
+        return map;
     }
 
     @Override
@@ -201,6 +180,10 @@ public class VacanciesViewModel extends AndroidViewModel{
         return checkedId;
     }
 
+    public void setCheckedId(MutableLiveData<Integer> checkedId){
+        this.checkedId = checkedId;
+    }
+
     MutableLiveData<String> getExperienceId(){
         return mExperienceId;
     }
@@ -215,5 +198,9 @@ public class VacanciesViewModel extends AndroidViewModel{
 
     public MutableLiveData<List<String>> getRegionList(){
         return regionList;
+    }
+
+    public Map<String, String> getExperienceMap(){
+        return experienceMap;
     }
 }

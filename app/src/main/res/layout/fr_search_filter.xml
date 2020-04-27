@@ -36,7 +36,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="8dp"
-                    android:text="Настроить поиск"
+                    android:text="@string/search_settings"
                     android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textSize="20sp" />
@@ -56,58 +56,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:hint="Введите слово для поиска" />
+                    android:hint="@string/search_word" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:padding="10dp"
                     android:textSize="16sp"
                     android:layout_height="wrap_content"
-                    android:text="Опыт работы:" />
+                    android:text="@string/experience" />
 
                 <RadioGroup
                     android:id="@+id/radio_group_experience"
                     android:padding="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:checkedButton="@={filterVm.checkedId}"
+                    bind:experienceMap="@{filterVm.experienceMap}"
                     android:onCheckedChanged="@{filterVm.onExperienceChanged}"
-                    android:orientation="vertical">
+                    android:checkedButton="@={filterVm.checkedId}"
+                    android:orientation="vertical"/>
 
-                    <RadioButton
-                        android:id="@+id/rb_exp_0"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="нет опыта" />
-
-                    <RadioButton
-                        android:id="@+id/rb_exp_1_3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="от 1 до 3 лет" />
-
-                    <RadioButton
-                        android:id="@+id/rb_exp_3_6"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="от 3 до 6 лет" />
-
-                    <RadioButton
-                        android:id="@+id/rb_exp_6"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="от 6 лет" />
-
-                    <RadioButton
-                        android:id="@+id/rb_exp_all"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Показать все" />
-
-                </RadioGroup>
-
-                <AutoCompleteTextView
-                    android:hint="Выберите регион"
+            <AutoCompleteTextView
+                    android:hint="@string/choose_region"
                     bind:autoCompleteData="@{filterVm.regionList}"
                     android:text="@={filterVm.searchRegionName}"
                     android:maxLines="1"
@@ -128,7 +97,7 @@
                     android:onClick="@{() -> filterVm.closeDialogFragment()}"
                     android:paddingStart="50dp"
                     android:paddingEnd="50dp"
-                    android:text="Найти" />
+                    android:text="@string/find" />
 
             </LinearLayout>
 

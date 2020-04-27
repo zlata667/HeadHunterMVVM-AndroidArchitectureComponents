@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import androidx.databinding.BindingAdapter;
 import androidx.lifecycle.MutableLiveData;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.headhunter.R;
+import com.example.headhunter.data.model.ExperienceResponse;
 import com.example.headhunter.data.model.Vacancies;
 import com.example.headhunter.ui.vacancies.VacanciesActivity;
 import com.example.headhunter.ui.vacancies.VacanciesAdapter;
@@ -59,4 +62,15 @@ public class CustomBindingAdapter{
         Picasso.get().load(url).into(imageView);
     }
 
+    @BindingAdapter("bind:experienceMap")
+    public static void configureRadioGroup(RadioGroup radioGroup, Map<String, String> experienceMap){
+        experienceMap.put("Показать все", null);
+        List<String> experienceNames = new ArrayList<String>(experienceMap.keySet());
+        for (String experienceName : experienceNames){
+            RadioButton radioButton = new RadioButton(radioGroup.getContext());
+            radioButton.setText(experienceName);
+            radioButton.setId(Math.abs(experienceName.hashCode()));
+            radioGroup.addView(radioButton);
+        }
+    }
 }

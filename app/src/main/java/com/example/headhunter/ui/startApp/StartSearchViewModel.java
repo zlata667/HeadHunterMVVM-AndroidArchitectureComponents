@@ -5,24 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.databinding.ObservableArrayList;
-import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.headhunter.R;
 import com.example.headhunter.data.model.Country;
+import com.example.headhunter.data.model.ExperienceResponse;
 import com.example.headhunter.ui.login.LoginActivity;
 import com.example.headhunter.ui.vacancies.VacanciesActivity;
 import com.example.headhunter.ui.vacancies.VacanciesFragment;
@@ -32,10 +25,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.TreeMap;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -43,22 +36,45 @@ import io.reactivex.schedulers.Schedulers;
 
 public class StartSearchViewModel extends AndroidViewModel{
 
-    private Disposable disposable;
+    private LinkedHashMap<String, String> regionsMap = new LinkedHashMap<>();
+    private LinkedHashMap<String, String> experienceMap = new LinkedHashMap<>();
+    private List<String> list = new ArrayList<>();
+    private MutableLiveData<List<String>> regionList = new MutableLiveData<>();
     private MutableLiveData<String> searchText = new MutableLiveData<>();
     private MutableLiveData<String> autoCompleteText = new MutableLiveData<>();
-    private SwipeRefreshLayout.OnRefreshListener onRefreshListener = () -> loadRegions();
 
     private MutableLiveData<Integer> errorVisibility = new MutableLiveData<>();
     private MutableLiveData<Boolean> isLoading = new MutableLiveData<>();
-
-    private Map<String, String> regionsMap = new HashMap<>();
-    private List<String> list = new ArrayList<>();
-    private MutableLiveData<List<String>> regionList = new MutableLiveData<>();
+    private Disposable disposable;
+    private SwipeRefreshLayout.OnRefreshListener onRefreshListener = () -> {
+        loadRegions();
+        loadExperiences();
+    };
 
     public StartSearchViewModel(@NonNull Application application){
         super(application);
         regionList.setValue(new ArrayList<>());
         loadRegions();
+        loadExperiences();
+    }
+
+    private void loadExperiences(){
+        disposable = ApiUtils.getApiService().getExperiences()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        this::saveExperience,
+                        throwable -> {
+                            Toast.makeText(getApplication().getApplicationContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                );
+    }
+
+    private void saveExperience(ExperienceResponse experiences){
+        for (ExperienceResponse.Experience experience : experiences.getExperience()) {
+            experienceMap.put(experience.getName(), experience.getId());
+        }
+        saveMapInSharedPreferences(experienceMap, "ExperienceMap");
     }
 
     private void loadRegions(){
@@ -77,24 +93,24 @@ public class StartSearchViewModel extends AndroidViewModel{
     }
 
     private void bind(List<Country> countries){
-        for (Country country : countries){
-            for (Country.Region region : country.getAreas()){
+        for (Country country : countries) {
+            for (Country.Region region : country.getAreas()) {
                 list.add(region.getName());
                 regionsMap.put(region.getName(), region.getId());
             }
         }
-        saveRegionMap(regionsMap);
+        saveMapInSharedPreferences(regionsMap, "RegionMap");
         regionList.postValue(list);
     }
 
-    private void saveRegionMap(Map<String, String> regionsMap){
-        SharedPreferences sharedPreferences = getApplication().getSharedPreferences("RegionsMap", Context.MODE_PRIVATE);
+    private void saveMapInSharedPreferences(LinkedHashMap<String, String> map, String name){
+        SharedPreferences sharedPreferences = getApplication().getSharedPreferences(name, Context.MODE_PRIVATE);
         if (sharedPreferences != null){
-            JSONObject jsonObject = new JSONObject(regionsMap);
+            JSONObject jsonObject = new JSONObject(map);
             String jsonString = jsonObject.toString();
             Editor editor = sharedPreferences.edit();
-            editor.remove("Map").apply();
-            editor.putString("Map", jsonString);
+            editor.remove(name).apply();
+            editor.putString(name, jsonString);
             editor.commit();
         }
     }

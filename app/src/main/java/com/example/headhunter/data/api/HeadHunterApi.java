@@ -1,6 +1,7 @@
 package com.example.headhunter.data.api;
 
 import com.example.headhunter.data.model.Country;
+import com.example.headhunter.data.model.ExperienceResponse;
 import com.example.headhunter.data.model.Vacancies;
 import com.example.headhunter.data.model.Vacancy;
 
@@ -23,4 +24,8 @@ public interface HeadHunterApi{
 
     @GET("/areas")
     Observable<List<Country>> getCities();
+
+    @GET("/dictionaries")
+    Single<ExperienceResponse> getExperiences();
+
 }
