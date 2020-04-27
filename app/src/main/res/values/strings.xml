@@ -11,4 +11,7 @@
     <string name="search_word">Введите слово для поиска</string>
     <string name="search_settings">Настроить поиск</string>
     <string name="experience">Опыт работы:</string>
+    <string name="emailOrPhone">Email или телефон</string>
+    <string name="password">Пароль</string>
+    <string name="login">Войдите в аккаунт</string>
 </resources>

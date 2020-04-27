@@ -13,97 +13,120 @@
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresher"
-        bind:onRefresh="@{searchModel.onRefreshListener}"
-        bind:refreshState="@{searchModel.isLoading}"
-        android:background="@color/colorBackground"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_width="match_parent">
+        android:background="@color/colorBackground"
+        bind:onRefresh="@{searchModel.onRefreshListener}"
+        bind:refreshState="@{searchModel.isLoading}">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageButton
-                android:src="@drawable/is_sign_in"
-                android:background="@color/colorBackground"
-                android:padding="10dp"
-                android:layout_alignParentEnd="true"
-                android:onClick="@{v -> searchModel.openLoginFragment(context)}"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:scaleType="centerInside"/>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:id="@+id/view_search"
-                android:gravity="center"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:paddingEnd="10dp"
-                android:paddingStart="10dp"
+            <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ImageView
-                    android:paddingTop="20dp"
-                    android:paddingBottom="40dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/hh_icon"
-                    android:src="@drawable/ic_hh" />
-
-                <TextView
-                    android:id="@+id/search_text"
-                    android:text="@string/find_vacancy"
-                    android:textSize="20sp"
-                    android:paddingBottom="20dp"
-                    android:textAlignment="center"
-                    android:layout_gravity="center_horizontal"
+                <LinearLayout
+                    android:id="@+id/view_search"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingStart="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="10dp">
 
-                <EditText
-                    android:id="@+id/et_search"
-                    android:text="@={searchModel.searchText}"
-                    android:hint="@string/search_word"
-                    android:textAlignment="center"
-                    android:singleLine="true"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/hh_icon"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="40dp"
+                        android:src="@drawable/ic_hh" />
 
-                <AutoCompleteTextView
-                    android:id="@+id/et_city"
-                    bind:autoCompleteData="@{searchModel.regionList}"
-                    android:text="@={searchModel.autoCompleteText}"
-                    android:hint="@string/choose_region"
-                    android:singleLine="true"
-                    android:textAlignment="center"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/search_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:paddingBottom="20dp"
+                        android:text="@string/find_vacancy"
+                        android:textAlignment="center"
+                        android:textSize="20sp" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_search"
-                    android:onClick="@{v -> searchModel.openVacanciesFragment(context)}"
-                    android:text="@string/find"
-                    android:textAlignment="center"
-                    android:background="@drawable/button"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:focusableInTouchMode="true"
+                        android:hint="@string/search_word">
 
-                <TextView
-                    android:id="@+id/error_text"
-                    android:text="@string/error_regions"
-                    android:visibility="@{searchModel.errorVisibility}"
-                    android:textSize="15sp"
-                    android:textAlignment="center"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:text="@={searchModel.searchText}"/>
 
-            </LinearLayout>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="8dp"
+                        android:focusableInTouchMode="true"
+                        android:hint="@string/choose_region">
+
+                        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:padding="10dp"
+                            android:inputType="none"
+                            android:text="@={searchModel.autoCompleteText}"
+                            bind:autoCompleteData="@{searchModel.regionList}" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_search"
+                        android:layout_margin="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/button"
+                        android:onClick="@{v -> searchModel.openVacanciesFragment(context)}"
+                        android:text="@string/find"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/error_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/error_regions"
+                        android:textAlignment="center"
+                        android:textSize="15sp"
+                        android:visibility="@{searchModel.errorVisibility}" />
+
+                </LinearLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:background="@color/colorBackground"
+                android:onClick="@{v -> searchModel.openLoginFragment(context)}"
+                android:padding="10dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/is_sign_in" />
 
         </RelativeLayout>
 

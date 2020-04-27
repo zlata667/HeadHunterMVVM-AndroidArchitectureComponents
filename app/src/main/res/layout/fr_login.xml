@@ -18,7 +18,7 @@
         android:paddingStart="10dp">
 
         <TextView
-            android:text="Войдите в аккаунт"
+            android:text="@string/login"
             android:textSize="25sp"
             android:paddingBottom="20dp"
             android:textAlignment="center"
@@ -26,21 +26,36 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <EditText
-            android:hint="Email или телефон"
-            android:padding="10dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/login_edittext"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:focusableInTouchMode="true"
+            android:hint="@string/emailOrPhone">
 
-        <EditText
-            android:hint="Пароль"
-            android:padding="10dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/login_edittext"
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:focusableInTouchMode="true"
+            android:hint="@string/password">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:text="Войти"
