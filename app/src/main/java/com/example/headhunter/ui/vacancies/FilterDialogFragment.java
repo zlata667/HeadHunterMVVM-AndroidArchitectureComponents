@@ -21,6 +21,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.headhunter.R;
 import com.example.headhunter.databinding.FilterSearchBinding;
 import com.example.headhunter.utils.factories.CustomVacanciesFactory;
 

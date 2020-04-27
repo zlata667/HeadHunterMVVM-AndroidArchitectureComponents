@@ -75,7 +75,7 @@ public class VacanciesViewModel extends AndroidViewModel{
     private Disposable disposable;
     private VacanciesAdapter.OnItemClickListener mOnItemClickListener;
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener =
-            () -> loadVacancies(mSearchText.getValue(), mSearchRegionId.getValue(), mExperienceId.getValue());
+            () -> loadVacancies(mSearchText.getValue(), mSearchRegionName.getValue(), mExperienceId.getValue());
 
     public VacanciesViewModel(@NonNull Application application, VacanciesAdapter.OnItemClickListener onItemClickListener,
                               String searchText, String searchRegionName, String searchExperienceId){

@@ -111,10 +111,11 @@
                     bind:autoCompleteData="@{filterVm.regionList}"
                     android:text="@={filterVm.searchRegionName}"
                     android:maxLines="1"
+                    android:padding="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_filter_search"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

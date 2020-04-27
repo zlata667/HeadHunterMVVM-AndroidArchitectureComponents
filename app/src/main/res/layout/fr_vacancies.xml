@@ -13,17 +13,18 @@
 
     </data>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refresher"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        bind:onRefresh="@{vm.onRefreshListener}"
-        bind:refreshState="@{vm.isLoading}">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/refresher"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            bind:onRefresh="@{vm.onRefreshListener}"
+            bind:refreshState="@{vm.isLoading}">
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -47,18 +48,22 @@
 
             </LinearLayout>
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
-                android:layout_margin="16dp"
-                android:onClick="@{v -> vm.openDialogFragment()}"
-                android:visibility="@{vm.isRecyclerVisible}"
-                android:src="@drawable/ic_settings" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fab_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="16dp"
+            android:backgroundTint="@color/colorBackground"
+            android:onClick="@{v -> vm.openDialogFragment()}"
+            android:visibility="@{vm.isRecyclerVisible}"
+            bind:icon="@drawable/ic_settings"
+            bind:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
+            app:targetApi="lollipop" />
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
 </layout>

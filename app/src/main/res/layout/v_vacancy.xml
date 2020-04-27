@@ -30,7 +30,6 @@
                 <ImageView
                     android:id="@+id/employer_logo"
                     bind:image="@{vacancyModel.vacancyLogo}"
-
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:scaleType="centerInside" />
@@ -73,6 +72,7 @@
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/view_vacancy"
+            android:background="@color/colorBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="8dp"

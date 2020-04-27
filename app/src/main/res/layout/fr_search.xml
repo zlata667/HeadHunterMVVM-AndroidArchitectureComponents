@@ -15,7 +15,7 @@
         android:id="@+id/refresher"
         bind:onRefresh="@{searchModel.onRefreshListener}"
         bind:refreshState="@{searchModel.isLoading}"
-        android:background="@color/colorAccent"
+        android:background="@color/colorBackground"
         android:layout_height="match_parent"
         android:layout_width="match_parent">
 
@@ -25,7 +25,7 @@
 
             <ImageButton
                 android:src="@drawable/is_sign_in"
-                android:background="@color/colorAccent"
+                android:background="@color/colorBackground"
                 android:padding="10dp"
                 android:layout_alignParentEnd="true"
                 android:onClick="@{v -> searchModel.openLoginFragment(context)}"
@@ -83,7 +83,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_search"
                     android:onClick="@{v -> searchModel.openVacanciesFragment(context)}"
                     android:text="@string/find"

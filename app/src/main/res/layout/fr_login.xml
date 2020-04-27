@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:text="Войти"
             android:layout_margin="10dp"
             android:textSize="15sp"
